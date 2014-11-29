@@ -1,0 +1,39 @@
+package jni;
+
+import android.os.AsyncTask;
+
+public class Gpio {
+	private static Gpio ins = null;
+
+	private Gpio() {
+
+	}
+
+	public static synchronized Gpio getInstance() {
+		if (ins == null) {
+			ins = new Gpio();
+		}
+		return ins;
+	}
+
+	/**
+	 * Return -1 = ERROR Return 0 = Good
+	 * 
+	 * @return
+	 */
+	private native int waitClick();
+
+	// Load library when class loaded
+	static {
+		System.loadLibrary("gpio");
+	}
+	
+	private class MyAsync extends AsyncTask<Void, Void, Integer>{
+
+		@Override
+		protected Integer doInBackground(Void... params) {
+			return waitClick();
+		}
+		
+	}
+}

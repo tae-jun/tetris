@@ -1,0 +1,18 @@
+package jni;
+
+public class Gpio extends Thread {
+	
+	@Override
+	public void run() {
+		super.run();
+		
+	}
+
+	/**
+	 * Return -1 = ERROR
+	 * Return 0  = Good
+	 * @return
+	 */
+	private native int waitClick();
+}
+

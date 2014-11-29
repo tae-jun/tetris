@@ -1,0 +1,24 @@
+#include <string.h>
+#include <jni.h>
+
+
+jint Java_jni_Gpio_waitClick(JNIEnv* env, jobject thiz)
+{
+	char buff[40];
+
+	dev = open("/dev/gpiobutton", O_RDWR);
+
+	if (dev < 0){
+		//printf("Device Open ERROR\n");
+		return -1;
+	}
+
+	//printf("Please push the GPIO_0 port\n");
+
+	read(dev, buff, 40);
+
+	//printf("%s\n", buff);
+	close(dev);
+
+	return 0;
+}

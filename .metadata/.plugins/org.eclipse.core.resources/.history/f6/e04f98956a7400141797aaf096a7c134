@@ -1,0 +1,49 @@
+package jni;
+
+import myandroid.testapp.PlayGround;
+
+public class Gpio extends Thread {
+	private static Gpio ins;
+
+	public static Gpio getInstance() {
+		if (ins == null) {
+			ins = new Gpio();
+		}
+		return ins;
+	}
+
+	private OnClickListener listener = new OnClickListener() {
+
+		public void onClick() {
+			// Do nothing
+		}
+	};
+
+	@Override
+	public void run() {
+		super.run();
+
+		waitClick();
+		//PlayGround.t_score.setText("CLICK");
+		// listener.onClick();
+	}
+
+	public void setOnClickListener(OnClickListener listener) {
+		this.listener = listener;
+	}
+
+	/**
+	 * Return -1 = ERROR Return 0 = Good
+	 * 
+	 * @return
+	 */
+	private native int waitClick();
+
+	static {
+		System.loadLibrary("gpio");
+	}
+
+	public interface OnClickListener {
+		void onClick();
+	}
+}

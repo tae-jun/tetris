@@ -1,0 +1,42 @@
+package jni;
+
+public class Gpio extends Thread {
+	private static Gpio ins;
+
+	public static Gpio getInstance() {
+		if (ins == null) {
+			ins = new Gpio();
+		}
+		return ins;
+	}
+
+	private OnClickListener listener;
+
+	@Override
+	public void run() {
+		super.run();
+		while (true) {
+			waitClick();
+			listener.onClick();
+		}
+	}
+
+	public void setOnClickListener(OnClickListener listener) {
+		this.listener = listener;
+	}
+
+	/**
+	 * Return -1 = ERROR Return 0 = Good
+	 * 
+	 * @return
+	 */
+	private native int waitClick();
+
+	static {
+		System.loadLibrary("gpio");
+	}
+
+	public interface OnClickListener {
+		void onClick();
+	}
+}

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="java.security.KeyStore.LoadStoreParameter"/>
+<fullyQualifiedTypeName name="java.lang.System"/>
+<fullyQualifiedTypeName name="myandroid.testapp.Tetris"/>
+<fullyQualifiedTypeName name="myandroid.testapp.TetrisView"/>
+<fullyQualifiedTypeName name="myandroid.testapp.PlayGround"/>
+<fullyQualifiedTypeName name="android.os.AsyncTask"/>
+<fullyQualifiedTypeName name="jni.Gpio.GpioAsync"/>
+<fullyQualifiedTypeName name="jni.Gpio.OnClickListener"/>
+<fullyQualifiedTypeName name="android.R.integer"/>
+<fullyQualifiedTypeName name="android.widget.Toast"/>
+<fullyQualifiedTypeName name="java.lang.Thread"/>
+<fullyQualifiedTypeName name="java.lang.Integer"/>
+<fullyQualifiedTypeName name="myandroid.testapp.R.id"/>
+<fullyQualifiedTypeName name="android.widget.TextView"/>
+<fullyQualifiedTypeName name="java.lang.Boolean"/>
+<fullyQualifiedTypeName name="jni.Gpio"/>
+<fullyQualifiedTypeName name="android.view.KeyEvent"/>
+</qualifiedTypeNameHistroy>

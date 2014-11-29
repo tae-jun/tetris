@@ -1,0 +1,64 @@
+package jni;
+
+import android.os.AsyncTask;
+
+public class Gpio {
+	private static Gpio ins = null;
+
+	private Gpio() {
+
+	}
+
+	public static synchronized Gpio getInstance() {
+		if (ins == null) {
+			ins = new Gpio();
+		}
+		return ins;
+	}
+
+	/**
+	 * Return -1 = ERROR Return 0 = Good
+	 * 
+	 * @return
+	 */
+	private native int waitClick();
+
+	// Load library when class loaded
+	static {
+		System.loadLibrary("gpio");
+	}
+
+	private OnClickListener listener;
+
+	public void setOnClickListener(OnClickListener listener) {
+		this.listener = listener;
+		GpioAsync async = new GpioAsync();
+		async.execute();
+	}
+
+	public interface OnClickListener {
+		void onClick(Integer result);
+	}
+
+	private class GpioAsync extends AsyncTask<Void, Void, Integer> {
+
+		@Override
+		protected void onPostExecute(Integer result) {
+			super.onPostExecute(result);
+			// After background task
+			listener.onClick(result);
+		}
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			// Before background task
+		}
+
+		@Override
+		protected Integer doInBackground(Void... params) {
+			return waitClick();
+		}
+
+	}
+}

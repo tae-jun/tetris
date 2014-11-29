@@ -1,0 +1,18 @@
+package jni;
+
+import android.os.Handler;
+import android.os.Looper;
+
+public class GpioThread extends Thread {
+	private Handler mainHandler;
+	
+	public GpioThread(Handler handler){
+		this.mainHandler = handler;
+	}
+	
+	public void run(){
+		Looper.prepare();
+		
+		Looper.loop();
+	}
+}

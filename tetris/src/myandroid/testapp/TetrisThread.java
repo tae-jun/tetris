@@ -3,18 +3,22 @@ package myandroid.testapp;
 import java.util.Random;
 
 import jni.Gpio;
+import jni.Gpio.OnClickListener;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.SurfaceHolder;
 
 public class TetrisThread extends Thread {
 	// 블록이 내려오는 주기
-	private int blockDownPeriod = 100;
+	private int blockDownPeriod = 1000;
 	// 다음 블록
 	private int nextBrick;
 	private String tag = "[TetrisThread]";
@@ -108,6 +112,19 @@ public class TetrisThread extends Thread {
 		mPaint = new Paint();
 		mPaint.setAntiAlias(true);
 		mPaint.setStyle(Paint.Style.FILL);
+
+		this.setName("TetrisThread");
+
+		Gpio.getInstance().addOnClickListener(new OnClickListener() {
+
+			public void onClickFail(int result) {
+				Log.e(tag, "Cannot find GPIO button module");
+			}
+
+			public void onClick(int result) {
+				doKeyDown(Gpio.KEYCODE_GPIO, null);
+			}
+		});
 	}
 
 	private void updatePlayGround(Canvas c) {
@@ -166,11 +183,11 @@ public class TetrisThread extends Thread {
 		currentBrick = nextBrick;
 		nextBrick = random.nextInt(7);
 
-		Log.d(tag, "currentBrick=" + currentBrick);
-		Log.d(tag, "nextBrick=" + nextBrick);
+		// Log.d(tag, "currentBrick=" + currentBrick);
+		// Log.d(tag, "nextBrick=" + nextBrick);
 
 		rotate = random.nextInt(4);
-		Log.d(tag, "rotate=" + rotate);
+		// Log.d(tag, "rotate=" + rotate);
 	}
 
 	//
@@ -303,7 +320,7 @@ public class TetrisThread extends Thread {
 	}
 
 	boolean doKeyDown(int keyCode, KeyEvent msg) {
-		Log.d(tag, "keyCode=" + keyCode);
+		// Log.d(tag, "keyCode=" + keyCode);
 		// 각 키 매치 이 부분은 실험장비로 옮길 시 반드시 Touch 인터페이스로 변경해야함.
 		if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN
 				|| keyCode == KeyEvent.KEYCODE_DPAD_UP
@@ -353,7 +370,6 @@ public class TetrisThread extends Thread {
 				playGround[x][y] = ran;
 			}
 		}
-
 		startNewBrick();
 		// mRun Flag를 이용하여 Thread를 종료하지 않은 상태에서 게임을 멈춘다.
 		while (mRun) {

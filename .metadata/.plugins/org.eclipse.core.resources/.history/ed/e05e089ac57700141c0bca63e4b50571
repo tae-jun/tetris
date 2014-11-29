@@ -1,0 +1,76 @@
+package jni;
+
+import java.util.ArrayList;
+
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+
+public class LooperTest {
+	private static final String tag = "LooperTest";
+
+	private ArrayList<OnClickListener> listeners;
+
+	private static LooperTest looperTestIns;
+
+	private LooperTest() {
+		listeners = new ArrayList<LooperTest.OnClickListener>();
+
+		// Startup thread
+		MyThread th = new MyThread(new Handler() {
+
+			@Override
+			public void handleMessage(Message msg) {
+				if (msg.what == 1) {
+					for (int i = 0; i < listeners.size(); i++) {
+						listeners.get(i).onClick(3);
+					}
+				}
+			}
+
+		});
+		th.setName("GpioButtonListenerThread");
+		th.start();
+
+		Log.d(tag, "Looper Test instance created");
+	}
+
+	public static LooperTest getInstance() {
+		Log.d(tag, "getInstance");
+		if (looperTestIns == null) {
+			synchronized (LooperTest.class) {
+				if (looperTestIns == null)
+					looperTestIns = new LooperTest();
+			}
+		}
+		return looperTestIns;
+	}
+
+	public void addOnClickListener(OnClickListener listener) {
+		listeners.add(listener);
+	}
+
+	public interface OnClickListener {
+		void onClick(int result);
+	}
+
+	private class MyThread extends Thread {
+		private Handler handler;
+
+		public MyThread(Handler handler) {
+			this.handler = handler;
+		}
+
+		@Override
+		public void run() {
+			while (true) {
+				handler.sendEmptyMessage(1);
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+}

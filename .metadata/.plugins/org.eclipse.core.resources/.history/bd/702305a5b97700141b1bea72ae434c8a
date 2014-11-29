@@ -1,0 +1,87 @@
+package myandroid.testapp;
+
+import android.view.KeyEvent;
+import android.view.SurfaceView;
+import android.view.SurfaceHolder;
+import android.widget.TextView;
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Color;
+import android.util.AttributeSet;
+import android.util.Log;
+import java.util.Random;
+
+/**
+ * CANNOT CONTROL UI. ONLY LOG ACCEPTED.
+ * 
+ * @author Jun
+ * 
+ */
+class TetrisView extends SurfaceView implements SurfaceHolder.Callback {
+	static Context context_debug;
+
+	private String tag = "[TetrisView]";
+
+	private TetrisThread tetrisThread;
+
+	public TetrisView(Context context, AttributeSet attrs) {
+		// TetrisView 생성자.
+		super(context, attrs);
+		Log.d(tag, "TetrisView#Constructor");
+		// SurfaceHoler 추출.
+		SurfaceHolder surfaceHolder = getHolder();
+		// CallBack 등록.
+		surfaceHolder.addCallback(this);
+		// Surface 제어를 위한 Thread 생성.
+		tetrisThread = new TetrisThread(surfaceHolder, context);
+		this.context_debug = context;
+		setFocusable(true);
+
+		Log.i(tag, "Tetris View constructor");
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent msg) {
+		// Can not control not only UI, but also LOG!
+		// So request to tetrisThread
+		return tetrisThread.doKeyDown(keyCode, msg);
+	}
+
+	@Override
+	public void onWindowFocusChanged(boolean hasWindowFocus) {
+		Log.d(tag, "TetrisView#onWindowFocusChanged()");
+	}
+
+	// Surface가 변경될 때마다 Log 출력
+	public void surfaceChanged(SurfaceHolder holder, int format, int width,
+			int height) {
+		Log.d(tag, "TetrisView#surfaceChanged(width=" + width + ", height="
+				+ height + ")");
+	}
+
+	public void surfaceCreated(SurfaceHolder holder) {
+		// Surface가 생성되었을 때 Thraed 시작.
+		Log.d(tag, "TetrisView#surfaceCreated()");
+		tetrisThread.setRunning(true);
+		tetrisThread.start();
+	}
+
+	public void surfaceDestroyed(SurfaceHolder holder) {
+		// Surface가 파괴되었을 때 호출.
+		Log.d(tag, "TetrisView#surfaceDestroyed()");
+		boolean retry = true;
+		// Thread가 파괴되지 않고 게임이 멈춤.
+		tetrisThread.setRunning(false);
+
+		// 재시도 요청이 들어오면
+		while (retry) {
+			try {
+				// Thread 다시 실행.
+				tetrisThread.join();
+				retry = false;
+			} catch (InterruptedException ie) {
+			}
+		}
+	}
+}

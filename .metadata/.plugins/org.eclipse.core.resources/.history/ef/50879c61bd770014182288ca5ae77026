@@ -1,0 +1,41 @@
+package jni;
+
+import java.util.ArrayList;
+
+public class LooperTest {
+	private static final String tag = "LooperTest";
+
+	private ArrayList<OnClickListener> listeners;
+	private MyThread thread;
+
+	private static LooperTest looperTestIns;
+
+	private LooperTest() {
+		listeners = new ArrayList<LooperTest.OnClickListener>();
+
+		// Startup thread
+
+	}
+
+	public static LooperTest getInstance() {
+		if (looperTestIns == null) {
+			synchronized (LooperTest.class) {
+				if (looperTestIns == null)
+					looperTestIns = new LooperTest();
+			}
+		}
+		return looperTestIns;
+	}
+
+	public void addOnClickListener(OnClickListener listener) {
+		listeners.add(listener);
+	}
+
+	public interface OnClickListener {
+		void onClick(int result);
+	}
+
+	private class MyThread extends Thread {
+
+	}
+}

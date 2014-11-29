@@ -1,0 +1,43 @@
+package jni;
+
+import java.util.ArrayList;
+
+import android.util.Log;
+
+public class LooperTest {
+	private static final String tag = "LooperTest";
+
+	private ArrayList<OnClickListener> listeners;
+	private MyThread thread;
+
+	private static LooperTest looperTestIns = null;
+
+	private LooperTest() {
+		listeners = new ArrayList<LooperTest.OnClickListener>();
+
+		// Startup thread
+
+		Log.d(tag, "LooperTest instance created");
+	}
+
+	public static LooperTest getInstance() {
+		if (looperTestIns == null) {
+			synchronized (looperTestIns) {
+				looperTestIns = new LooperTest();
+			}
+		}
+		return looperTestIns;
+	}
+
+	public void addOnClickListener(OnClickListener listener) {
+		listeners.add(listener);
+	}
+
+	public interface OnClickListener {
+		void onClick(int result);
+	}
+
+	private class MyThread extends Thread {
+
+	}
+}

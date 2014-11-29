@@ -1,0 +1,98 @@
+package jni;
+
+import java.util.ArrayList;
+
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+
+import jni.LooperTest.OnClickListener;
+
+/**
+ * Singleton class Use method Gpio.getInstance() to get instance
+ * 
+ * @author Jun
+ * 
+ */
+public class Gpio {
+	// Load library when class loaded
+	static {
+		System.loadLibrary("gpio");
+	}
+
+	private ArrayList<OnClickListener> listeners;
+
+	private static Gpio instance;
+	private static final String tag = "Gpio";
+	private static final int GPIO_CLICK = 0;
+	private static final int GPIO_CLICK_FAIL = -1;
+
+	public static final int KEYCODE_GPIO = 100;
+
+	private Gpio() {
+		listeners = new ArrayList<Gpio.OnClickListener>();
+
+		// Startup thread
+		MyThread th = new MyThread(new Handler() {
+
+			@Override
+			public void handleMessage(Message msg) {
+				if (msg.what == 1) {
+					for (int i = 0; i < listeners.size(); i++) {
+						listeners.get(i).onClick(3);
+					}
+				}
+			}
+
+		});
+		th.setName("GpioButtonListenerThread");
+		th.start();
+
+		Log.d(tag, "Looper Test instance created");
+	}
+
+	public void addOnClickListener(OnClickListener listener) {
+		this.listener = listener;
+	}
+
+	/**
+	 * Return -1 = ERROR Return 0 = Good
+	 * 
+	 * @return
+	 */
+	private native int waitClick();
+
+	private void setGpioAsyncTask() {
+		GpioAsync async = new GpioAsync();
+		async.execute();
+	}
+
+	public static Gpio getInstance() {
+		if(instance)
+	}
+
+	private class GpioThread extends Thread {
+		private Handler handler;
+
+		public GpioThread(Handler handler) {
+			this.handler = handler;
+		}
+
+		@Override
+		public void run() {
+			while (true) {
+				int result = waitClick();
+				handler.sendEmptyMessage(result);
+			}
+		}
+	}
+
+	public interface OnClickListener {
+		/**
+		 * 0 = success, -1 = error
+		 * 
+		 * @param result
+		 */
+		void onClick(Integer result);
+	}
+}

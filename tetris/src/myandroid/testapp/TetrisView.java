@@ -12,6 +12,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import java.util.Random;
 
+
 /**
  * CANNOT CONTROL UI. ONLY LOG ACCEPTED.
  * 

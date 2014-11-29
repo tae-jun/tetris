@@ -1,6 +1,11 @@
 package jni;
 
-import android.os.AsyncTask;
+import java.util.ArrayList;
+
+import android.annotation.SuppressLint;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 
 /**
  * Singleton class Use method Gpio.getInstance() to get instance
@@ -14,22 +19,46 @@ public class Gpio {
 		System.loadLibrary("gpio");
 	}
 
-	private OnClickListener listener = null;
+	private ArrayList<OnClickListener> listeners;
+	private GpioThread gpioThread;
+	private Handler onGpioBtnClickHandler;
 
-	private static Gpio ins = null;
+	private static Gpio gpioInstance;
+	private static final String tag = "Gpio";
+	private static final int GPIO_CLICK = 0;
+	private static final int GPIO_CLICK_FAIL = -1;
+
 	public static final int KEYCODE_GPIO = 100;
 
+	@SuppressLint("HandlerLeak")
 	private Gpio() {
-		setGpioAsyncTask();
+		this.listeners = new ArrayList<Gpio.OnClickListener>();
+
+		// Startup thread
+		onGpioBtnClickHandler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				if (msg.what == GPIO_CLICK) {
+					for (int i = 0; i < listeners.size(); i++) {
+						listeners.get(i).onClick(GPIO_CLICK);
+					}
+				} else if (msg.what == GPIO_CLICK_FAIL) {
+					for (int i = 0; i < listeners.size(); i++) {
+						listeners.get(i).onClickFail(GPIO_CLICK_FAIL);
+					}
+				}
+			}
+		};
+
+		gpioThread = new GpioThread(onGpioBtnClickHandler);
+		gpioThread.setName("GpioThread");
+		gpioThread.start();
+
+		Log.d(tag, "GPIO instance created");
 	}
 
-	/**
-	 * Set litener for gpio button
-	 * 
-	 * @param listener
-	 */
-	public void setOnClickListener(OnClickListener listener) {
-		this.listener = listener;
+	public void addOnClickListener(OnClickListener listener) {
+		this.listeners.add(listener);
 	}
 
 	/**
@@ -39,50 +68,45 @@ public class Gpio {
 	 */
 	private native int waitClick();
 
-	private void setGpioAsyncTask() {
-		GpioAsync async = new GpioAsync();
-		async.execute();
+	public static Gpio getInstance() {
+		if (gpioInstance == null) {
+			synchronized (Gpio.class) {
+				if (gpioInstance == null)
+					gpioInstance = new Gpio();
+			}
+		}
+
+		return gpioInstance;
 	}
 
-	public static synchronized Gpio getInstance() {
-		if (ins == null) {
-			ins = new Gpio();
-		}
-		return ins;
-	}
+	private class GpioThread extends Thread {
+		private Handler handler;
 
-	private class GpioAsync extends AsyncTask<Void, Void, Integer> {
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			// Before background task
+		public GpioThread(Handler handler) {
+			this.handler = handler;
 		}
 
 		@Override
-		protected Integer doInBackground(Void... params) {
-			// Wait until GPIO button pressed
-			return waitClick();
-		}
-
-		@Override
-		protected void onPostExecute(Integer result) {
-			super.onPostExecute(result);
-			// After background task
-			if (listener != null)
-				listener.onClick(result);
-
-			setGpioAsyncTask();
+		public void run() {
+			try {
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			while (runThread) {
+				// Wait for GPIO button clicked
+				int result = waitClick();
+				handler.sendEmptyMessage(result);
+				if (result == GPIO_CLICK_FAIL)
+					this.stop();
+			}
 		}
 	}
 
 	public interface OnClickListener {
-		/**
-		 * 0 = success, -1 = error
-		 * 
-		 * @param result
-		 */
-		void onClick(Integer result);
-	}
 
+		void onClick(int result);
+
+		void onClickFail(int result);
+	}
 }

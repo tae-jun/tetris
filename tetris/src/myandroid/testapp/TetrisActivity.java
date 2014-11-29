@@ -1,6 +1,7 @@
 package myandroid.testapp;
 
 import jni.Gpio;
+import jni.Gpio.OnClickListener;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 import android.util.Log;
 
 public class TetrisActivity extends Activity {
+	private static final String tag = "TetrisActivity";
+
 	static public TextView t_score = null;
 	private TetrisView mTetrisView;
 
@@ -52,16 +55,5 @@ public class TetrisActivity extends Activity {
 
 		// mTetrisView.setTextView( (TextView) findViewById( R.id.gamemsg );
 		Log.d("[TetrisLog]", "PlayGround#onCreate()");
-
-		Gpio gpio = Gpio.getInstance();
-		gpio.setOnClickListener(new Gpio.OnClickListener() {
-
-			public void onClick(Integer result) {
-				if (result == -1)
-					t_score.setText("GPIO module not found");
-				else if (result == 0)
-					t_score.setText("GPIO Clicked result: " + result.toString());
-			}
-		});
 	}
 }

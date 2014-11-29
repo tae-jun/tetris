@@ -1,0 +1,8 @@
+NDK = /root/tools/android-ndk-r4/
+TETRIS = /root/share/workspace/tetris/
+TFTP = /tftpboot/
+
+default:
+	$(NDK)ndk-build -C $(TETRIS)
+	cp $(TETRIS)libs/armeabi/libgpio.so $(TFTP)
+	cp $(TETRIS)bin/tetris.apk $(TFTP)

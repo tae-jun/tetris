@@ -32,8 +32,7 @@ jint Java_jni_Gpio_waitClick(JNIEnv* env, jobject thiz) {
 	return 0;
 }
 
-jint Java_jni_Led_control(JNIEnv* env, jobject thiz,
-		jint data) {
+jint Java_jni_Led_control(JNIEnv* env, jobject thiz, jint data) {
 	int fd, ret;
 
 	fd = open("/dev/ledioport", O_WRONLY);

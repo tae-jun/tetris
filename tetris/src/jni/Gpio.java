@@ -57,13 +57,6 @@ public class Gpio {
 		this.listeners.add(listener);
 	}
 
-	/**
-	 * Return -1 = ERROR Return 0 = Good
-	 * 
-	 * @return
-	 */
-	private native int waitClick();
-
 	public static Gpio getInstance() {
 		if (gpioInstance == null) {
 			synchronized (Gpio.class) {
@@ -74,6 +67,13 @@ public class Gpio {
 
 		return gpioInstance;
 	}
+
+	/**
+	 * Return -1 = ERROR Return 0 = Good
+	 * 
+	 * @return
+	 */
+	private native int waitClick();
 
 	private class GpioThread extends Thread {
 		private Handler handler;
@@ -94,7 +94,7 @@ public class Gpio {
 					runThread = false;
 			}
 
-			Log.d(tag, "GPIO Thread stopped");
+			Log.e(tag, "GPIO Thread stopped");
 		}
 	}
 

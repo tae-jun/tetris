@@ -1,6 +1,6 @@
 package jni;
 
-import android.annotation.SuppressLint;
+import myandroid.testapp.MainActivity;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -18,8 +18,6 @@ public class Led {
 		ledThread.setName("LedThread");
 		ledThread.start();
 	}
-
-	private native int control(int ledData);
 
 	public static Led getInstance() {
 		if (ledInstace == null) {
@@ -39,33 +37,97 @@ public class Led {
 	 *            8-digit binary string. For example, "10110100"
 	 */
 	public void setLed(String data) {
-		int ledData = Integer.parseInt(data, 2);
-		Log.d(tag, Integer.toBinaryString(ledData));
-		ledThread.handler = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {
-
-			}
-		};
-		ledThread.handler.sendEmptyMessage(ledData);
+		try {
+			int ledData = Integer.parseInt(data, 2);
+			ledThread.waitUntilReady();
+			ledThread.handler.sendEmptyMessage(ledData);
+		} catch (NumberFormatException e) {
+			Log.e(tag, "setLed data is not binary string!");
+			e.printStackTrace();
+		}
 	}
 
+	/**
+	 * Actual method that control led through native C code.
+	 * 
+	 * @param ledData
+	 *            8-digit binary string. For example, "10110100"
+	 * @return
+	 */
+	private native int control(int ledData);
+
+	/**
+	 * To create Looper Thread, then send a message immediately, you must call
+	 * waitUntilReady method before send message to handler.
+	 * 
+	 * @author Jun
+	 * 
+	 */
 	private class LedThread extends Thread {
 		Handler handler;
+		private Looper mLooper;
+		private static final String tag = "LedThread";
 
-		@SuppressLint("HandlerLeak")
-		@Override
 		public void run() {
 			Looper.prepare();
+			synchronized (this) {
+				mLooper = Looper.myLooper();
+				notifyAll();
+			}
+			Looper.loop();
+		}
 
-			handler = new Handler() {
+		public synchronized void waitUntilReady() {
+			if (handler == null)
+				setHandler();
+		}
+
+		private void setHandler() {
+			this.handler = new Handler(getLooper()) {
 				@Override
 				public void handleMessage(Message msg) {
-					
+					int ledData = msg.what;
+					int result = control(ledData);
+
+					Log.i(tag, "SET LED = " + Integer.toBinaryString(ledData)
+							+ " -> " + Integer.toString(result));
+
+					if (result != 0) {
+						requestToMainThread(new Runnable() {
+							public void run() {
+								MainActivity
+										.appendText("LED module not found.");
+								MainActivity
+										.appendText("LED Thread is going to be stopped");
+							}
+						});
+						// Stop thread by stopping looper
+						Looper.myLooper().quit();
+
+						Log.e(tag, "LED Thread stopped");
+					}
 				}
 			};
 
-			Looper.loop();
+			Log.d(tag, "Handler created");
 		}
+
+		private void requestToMainThread(Runnable runnable) {
+			new Handler(Looper.getMainLooper()).post(runnable);
+		}
+
+		private Looper getLooper() {
+			if (mLooper == null)
+				synchronized (this) {
+					while (mLooper == null) {
+						try {
+							wait();
+						} catch (InterruptedException e) {
+						}
+					}
+				}
+			return mLooper;
+		}
+
 	}
 }

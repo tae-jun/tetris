@@ -1,7 +1,5 @@
 package myandroid.testapp;
 
-import jni.Gpio;
-import jni.Gpio.OnClickListener;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,7 +12,7 @@ public class TetrisActivity extends Activity {
 	private static final String tag = "TetrisActivity";
 
 	static public TextView t_score = null;
-	private TetrisView mTetrisView;
+	// private TetrisView mTetrisView;
 
 	private static final int MENU_START = 1;
 	private static final int MENU_STOP = 2;
@@ -48,12 +46,12 @@ public class TetrisActivity extends Activity {
 		// XML 파일 로드.
 		setContentView(R.layout.tetris);
 		// View 등록.
-		mTetrisView = (TetrisView) findViewById(R.id.tetris);
+		// mTetrisView = (TetrisView) findViewById(R.id.tetris);
 		// mTetrisThread = mTetrisView.getThread();
 
 		t_score = (TextView) findViewById(R.id.score);
 
 		// mTetrisView.setTextView( (TextView) findViewById( R.id.gamemsg );
-		Log.d("[TetrisLog]", "PlayGround#onCreate()");
+		Log.d(tag, "PlayGround#onCreate()");
 	}
 }

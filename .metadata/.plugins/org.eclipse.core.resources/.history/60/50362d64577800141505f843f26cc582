@@ -4,5 +4,5 @@ TFTP = /tftpboot/
 
 default:
 	$(NDK)ndk-build -C $(TETRIS)
-	cp $(TETRIS)libs/armeabi/libgpio.so $(TFTP)
+	cp $(TETRIS)libs/armeabi/libnative.so $(TFTP)
 	cp $(TETRIS)bin/tetris.apk $(TFTP)

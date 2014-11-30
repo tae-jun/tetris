@@ -1,0 +1,111 @@
+package jni;
+
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.util.Log;
+
+public class Led {
+
+	private LedThread ledThread;
+
+	private static final String tag = "Led";
+	private static Led ledInstace;
+
+	private Led() {
+		ledThread = new LedThread();
+		ledThread.setName("LedThread");
+		ledThread.start();
+	}
+
+	public static Led getInstance() {
+		if (ledInstace == null) {
+			synchronized (Led.class) {
+				if (ledInstace == null)
+					ledInstace = new Led();
+			}
+		}
+
+		return ledInstace;
+	}
+
+	/**
+	 * Set LED
+	 * 
+	 * @param data
+	 *            8-digit binary string. For example, "10110100"
+	 */
+	public void setLed(String data) {
+		try {
+			int ledData = Integer.parseInt(data, 2);
+			ledThread.waitUntilReady();
+			ledThread.handler.sendEmptyMessage(ledData);
+		} catch (NumberFormatException e) {
+			Log.e(tag, "setLed data is not binary string!");
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Actual method that control led through native C code.
+	 * 
+	 * @param ledData
+	 *            8-digit binary string. For example, "10110100"
+	 * @return
+	 */
+	private native int control(int ledData);
+
+	/**
+	 * To create Looper Thread, then send a message immediately, you must call
+	 * waitUntilReady method before send message to handler.
+	 * 
+	 * @author Jun
+	 * 
+	 */
+	private class LedThread extends Thread {
+		Handler handler;
+		private Looper mLooper;
+		private static final String tag = "LedThread";
+
+		public void run() {
+			Looper.prepare();
+			synchronized (this) {
+				mLooper = Looper.myLooper();
+				notifyAll();
+			}
+			Looper.loop();
+		}
+
+		public synchronized void waitUntilReady() {
+			if (handler == null)
+				setHandler();
+		}
+
+		private void setHandler() {
+			this.handler = new Handler(getLooper()) {
+				@Override
+				public void handleMessage(Message msg) {
+					int ledData = msg.what;
+					control(ledData);
+					Log.i(tag, "SET LED = " + Integer.toBinaryString(ledData));
+				}
+			};
+
+			Log.d(tag, "Handler created");
+		}
+
+		private Looper getLooper() {
+			if (mLooper == null)
+				synchronized (this) {
+					while (mLooper == null) {
+						try {
+							wait();
+						} catch (InterruptedException e) {
+						}
+					}
+				}
+			return mLooper;
+		}
+
+	}
+}

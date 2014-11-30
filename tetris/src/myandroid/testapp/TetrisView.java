@@ -3,15 +3,9 @@ package myandroid.testapp;
 import android.view.KeyEvent;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
-import android.widget.TextView;
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.Log;
-import java.util.Random;
-
 
 /**
  * CANNOT CONTROL UI. ONLY LOG ACCEPTED.
@@ -36,7 +30,7 @@ class TetrisView extends SurfaceView implements SurfaceHolder.Callback {
 		surfaceHolder.addCallback(this);
 		// Surface 제어를 위한 Thread 생성.
 		tetrisThread = new TetrisThread(surfaceHolder, context);
-		this.context_debug = context;
+		TetrisView.context_debug = context;
 		setFocusable(true);
 
 		Log.i(tag, "Tetris View constructor");

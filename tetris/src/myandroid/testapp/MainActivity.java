@@ -1,10 +1,13 @@
 package myandroid.testapp;
 
+import jni.Gpio.*;
+import jni.Gpio;
 import jni.Led;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.content.Intent;
 import android.util.Log;
 
@@ -16,13 +19,20 @@ public class MainActivity extends Activity {
 
 	private final String tag = "MainActivity";
 
+	public static final int HANDLE_GPIO = 0;
+	public static final int HANDLE_LED = 1;
+	public static final int HANDLE_7SEGMENT = 2;
+
+	private static TextView txt;
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		// 시작 액티비티
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		Log.d("[TetrisLog]", "Tetris#onCreate()");
+		Log.d(tag, "MainActivity created");
+
+		txt = (TextView) findViewById(R.id.txt);
 
 		// Start Button 등록
 		Button startButton = (Button) findViewById(R.id.startGame);
@@ -37,9 +47,25 @@ public class MainActivity extends Activity {
 			}
 		});
 
-		Led.getInstance().setLed("00000001");
-		Led.getInstance().setLed("00000010");
-		Led.getInstance().setLed("00000100");
-		Led.getInstance().setLed("10101010");
+		// Initialize LED
+		Led.getInstance().setLed("00000000");
+
+		// Initialize GPIO Button
+		Gpio.getInstance().addOnClickListener(new OnClickListener() {
+
+			public void onClickFail(int result) {
+				appendText("GPIO module not found");
+				appendText("GPIO Thread is going to be stopped");
+			}
+
+			public void onClick(int result) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+	}
+
+	public static void appendText(String msg) {
+		txt.setText(txt.getText() + "\n" + msg);
 	}
 }

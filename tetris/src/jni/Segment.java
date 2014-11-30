@@ -1,9 +1,5 @@
 package jni;
 
-public class Led {
-	public Led() {
-		
-	}
-
+public class Segment {
 	private native int control(int ledData);
 }

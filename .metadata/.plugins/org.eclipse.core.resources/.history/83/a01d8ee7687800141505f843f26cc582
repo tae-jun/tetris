@@ -51,23 +51,3 @@ jint Java_jni_Led_control(JNIEnv* env, jobject thiz, jint data) {
 	return -1;
 }
 
-jint Java_jni_Segment_control(JNIEnv* env,
-		jobject thiz, jint data) {
-
-	int fd, ret;
-	fd = open("/dev/segment", O_RDWR | O_SYNC);
-	if (fd < 0)
-		return -errno;
-	if (fd > 0) {
-		ret = write(fd, &data, 4);
-		close(fd);
-	} else
-		return fd;
-
-	if (ret > 0)
-		return 0;
-
-	return -1;
-}
-
-

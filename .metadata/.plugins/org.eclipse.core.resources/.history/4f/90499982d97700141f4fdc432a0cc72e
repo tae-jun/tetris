@@ -1,9 +1,0 @@
-package jni;
-
-public class Led {
-	public Led() {
-		
-	}
-
-	public native int control(int ledData);
-}

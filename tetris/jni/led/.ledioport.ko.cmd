@@ -1,0 +1,1 @@
+cmd_/root/share/jni/led/ledioport.ko := /usr/local/arm/arm-2009q3/bin/arm-none-linux-gnueabi-ld -EL -r   -o /root/share/jni/led/ledioport.ko /root/share/jni/led/ledioport.o /root/share/jni/led/ledioport.mod.o

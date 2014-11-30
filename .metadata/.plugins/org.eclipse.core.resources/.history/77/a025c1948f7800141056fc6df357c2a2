@@ -1,0 +1,15 @@
+NDK = /root/tools/android-ndk-r4/
+TFTP = /tftpboot/
+PWD:=$(shell pwd)
+
+default:
+	$(NDK)ndk-build -C $(PWD)
+	$(MAKE) -C $(PWD)/jni/gpio
+	$(MAKE) -C $(PWD)/jni/led
+	$(MAKE) -C $(PWD)/jni/7seg
+	cp $(PWD)/jni/gpio/gpio.ko $(TFTP)
+	cp $(PWD)/jni/led/ledioport.ko $(TFTP)
+	cp $(PWD)/jni/7seg/segment.ko $(TFTP)
+	cp $(PWD)/libs/armeabi/libnative.so $(TFTP)
+	cp $(PWD)/bin/tetris.apk $(TFTP)
+	ls $(TFTP)

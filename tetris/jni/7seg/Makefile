@@ -1,0 +1,20 @@
+CC=arm-linux-gcc
+obj-m:=segment.o
+KDIR:=/Android/linux-2.6.29.0-hanback
+PWD:=$(shell pwd)
+
+TEST_TARGET = seg_test
+TEST_SRCS = $(TEST_TARGET).c
+
+default: $(TEST_TARGET)
+		$(MAKE) -C $(KDIR) SUBDIRS=$(PWD) modules
+		$(CC) $(TEST_SRCS) -static -o $(TEST_TARGET)
+		rm -f default
+
+clean:
+	rm -f *.ko
+	rm -f *.o
+	rm -f *.mod.*
+	rm -f .*.cmd
+	rm -f $(TEST_TARGET)
+	rm *odule*

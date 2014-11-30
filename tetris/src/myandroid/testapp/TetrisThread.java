@@ -180,7 +180,7 @@ public class TetrisThread extends Thread {
 		currentBrick = nextBrick;
 		nextBrick = random.nextInt(7);
 
-		// Log.d(tag, "currentBrick=" + currentBrick);
+		Log.d(tag, "currentBrick = " + currentBrick);
 		// Log.d(tag, "nextBrick=" + nextBrick);
 
 		rotate = random.nextInt(4);

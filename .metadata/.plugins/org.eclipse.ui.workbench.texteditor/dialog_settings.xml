@@ -8,10 +8,10 @@
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="keyCode"/>
 			<item value="keycode"/>
 			<item value="Log"/>
 			<item value="&quot;[TetrisLog]&quot;"/>
-			<item value="keyCode"/>
 			<item value=""/>
 		</list>
 		<list key="replacehistory">

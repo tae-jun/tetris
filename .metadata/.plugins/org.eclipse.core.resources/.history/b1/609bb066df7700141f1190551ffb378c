@@ -1,0 +1,54 @@
+package jni;
+
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+
+public class Led {
+
+	private LedThread ledThread;
+
+	private static Led ledInstace;
+
+	private Led() {
+		ledThread = new LedThread();
+		ledThread.setName("LedThread");
+		ledThread.start();
+	}
+
+	public native int control(int ledData);
+
+	public static Led getInstance() {
+		if (ledInstace == null) {
+			synchronized (Led.class) {
+				if (ledInstace == null)
+					ledInstace = new Led();
+			}
+		}
+
+		return ledInstace;
+	}
+
+	public void setLed(String data) {
+		int ledData = Integer.parseInt(data, 2);
+		ledThread.handler.sendEmptyMessage(ledData);
+	}
+
+	private class LedThread extends Thread {
+		Handler handler;
+
+		@Override
+		public void run() {
+			Looper.prepare();
+
+			Handler handler = new Handler() {
+				@Override
+				public void handleMessage(Message msg) {
+					
+				}
+			};
+
+			Looper.loop();
+		}
+	}
+}

@@ -1,16 +1,19 @@
 package myandroid.testapp;
 
-import jni.Gpio;
+import jni.Led;
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Looper;
 import android.view.View;
-import android.view.KeyEvent;
 import android.widget.Button;
 import android.content.Intent;
 import android.util.Log;
 
 public class MainActivity extends Activity {
+	// Load library
+	static {
+		System.loadLibrary("native");
+	}
+
 	private final String tag = "MainActivity";
 
 	/** Called when the activity is first created. */
@@ -33,5 +36,10 @@ public class MainActivity extends Activity {
 				startActivity(intent);
 			}
 		});
+
+		Led.getInstance().setLed("00000001");
+		Led.getInstance().setLed("00000010");
+		Led.getInstance().setLed("00000100");
+		Led.getInstance().setLed("10101010");
 	}
 }

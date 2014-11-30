@@ -1,4 +1,4 @@
-INDEX VERSION 1.126+C:\Users\Jun\Desktop\share\tetris\.metadata\.plugins\org.eclipse.jdt.core
-1986236618.index
+INDEX VERSION 1.126+C:\GitHub\tetris\.metadata\.plugins\org.eclipse.jdt.core
 1005387591.index
 3705561576.index
+1986236618.index

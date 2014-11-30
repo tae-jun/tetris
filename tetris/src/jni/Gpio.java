@@ -14,10 +14,6 @@ import android.util.Log;
  * 
  */
 public class Gpio {
-	// Load library when class loaded
-	static {
-		System.loadLibrary("gpio");
-	}
 
 	private ArrayList<OnClickListener> listeners;
 	private GpioThread gpioThread;
@@ -88,18 +84,17 @@ public class Gpio {
 
 		@Override
 		public void run() {
-			try {
-				
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
+			boolean runThread = true;
 			while (runThread) {
 				// Wait for GPIO button clicked
 				int result = waitClick();
 				handler.sendEmptyMessage(result);
+				// Stop if cannot find GPIO module
 				if (result == GPIO_CLICK_FAIL)
-					this.stop();
+					runThread = false;
 			}
+
+			Log.d(tag, "GPIO Thread stopped");
 		}
 	}
 

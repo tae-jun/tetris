@@ -1,0 +1,71 @@
+package jni;
+
+import android.annotation.SuppressLint;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.util.Log;
+
+public class Led {
+
+	private LedThread ledThread;
+
+	private static final String tag = "Led";
+	private static Led ledInstace;
+
+	private Led() {
+		ledThread = new LedThread();
+		ledThread.setName("LedThread");
+		ledThread.start();
+	}
+
+	private native int control(int ledData);
+
+	public static Led getInstance() {
+		if (ledInstace == null) {
+			synchronized (Led.class) {
+				if (ledInstace == null)
+					ledInstace = new Led();
+			}
+		}
+
+		return ledInstace;
+	}
+
+	/**
+	 * Set LED
+	 * 
+	 * @param data
+	 *            8-digit binary string. For example, "10110100"
+	 */
+	public void setLed(String data) {
+		int ledData = Integer.parseInt(data, 2);
+		Log.d(tag, Integer.toBinaryString(ledData));
+		ledThread.handler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+
+			}
+		};
+		ledThread.handler.sendEmptyMessage(ledData);
+	}
+
+	private class LedThread extends Thread {
+		Handler handler;
+
+		@SuppressLint("HandlerLeak")
+		@Override
+		public void run() {
+			Looper.prepare();
+
+			handler = new Handler() {
+				@Override
+				public void handleMessage(Message msg) {
+					
+				}
+			};
+
+			Looper.loop();
+		}
+	}
+}

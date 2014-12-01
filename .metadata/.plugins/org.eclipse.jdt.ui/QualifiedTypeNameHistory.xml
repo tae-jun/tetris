@@ -18,9 +18,7 @@
 <fullyQualifiedTypeName name="jni.Gpio.GpioThread"/>
 <fullyQualifiedTypeName name="jni.Led"/>
 <fullyQualifiedTypeName name="java.lang.String"/>
-<fullyQualifiedTypeName name="android.util.Log"/>
 <fullyQualifiedTypeName name="java.lang.Boolean"/>
-<fullyQualifiedTypeName name="java.lang.Thread"/>
 <fullyQualifiedTypeName name="jni.Led.LedThread"/>
 <fullyQualifiedTypeName name="java.lang.NumberFormatException"/>
 <fullyQualifiedTypeName name="android.os.Handler.Callback"/>
@@ -29,10 +27,14 @@
 <fullyQualifiedTypeName name="android.app.Activity"/>
 <fullyQualifiedTypeName name="android.widget.TextView"/>
 <fullyQualifiedTypeName name="myandroid.testapp.R.id"/>
-<fullyQualifiedTypeName name="android.os.Handler"/>
 <fullyQualifiedTypeName name="java.lang.Runnable"/>
 <fullyQualifiedTypeName name="myandroid.testapp.MainActivity"/>
-<fullyQualifiedTypeName name="android.os.Looper"/>
 <fullyQualifiedTypeName name="jni.Gpio.OnClickListener"/>
 <fullyQualifiedTypeName name="jni.Gpio"/>
+<fullyQualifiedTypeName name="java.lang.Thread"/>
+<fullyQualifiedTypeName name="android.os.Looper"/>
+<fullyQualifiedTypeName name="android.os.Handler"/>
+<fullyQualifiedTypeName name="android.util.Log"/>
+<fullyQualifiedTypeName name="jni.Segment.SegmentThread"/>
+<fullyQualifiedTypeName name="jni.Segment"/>
 </qualifiedTypeNameHistroy>

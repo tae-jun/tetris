@@ -28,14 +28,6 @@ public class Segment {
 
 		return segInstance;
 	}
-	
-	/**
-	 * Print number
-	 * @param num
-	 */
-	public void setNum(int num){
-		
-	}
 
 	/**
 	 * 0x10 = BRICK1, 0x11 = BRICK2, 0x12 = BRICK3, ... , 0x06 = BRICK7

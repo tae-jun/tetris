@@ -6,29 +6,6 @@ import android.os.Message;
 import android.util.Log;
 
 public class Segment {
-
-	private SegmentThread segThread;
-
-	private static final String tag = "Segment";
-	private static Segment segInstance;
-
-	private Segment() {
-		segThread = new SegmentThread();
-		segThread.setName("SegmentThread");
-		segThread.start();
-	}
-
-	public static Segment getInstance() {
-		if (segInstance == null) {
-			synchronized (Segment.class) {
-				if (segInstance == null)
-					segInstance = new Segment();
-			}
-		}
-
-		return segInstance;
-	}
-
 	/**
 	 * 0x10 = BRICK1, 0x11 = BRICK2, 0x12 = BRICK3, ... , 0x06 = BRICK7
 	 * 
@@ -62,9 +39,7 @@ public class Segment {
 			this.handler = new Handler(getLooper()) {
 				@Override
 				public void handleMessage(Message msg) {
-					/*
-					 * TODO################################
-					 */
+
 				}
 			};
 
